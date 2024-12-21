@@ -157,7 +157,7 @@ The repository is organized by parts and exercises, following the course's struc
    ```
 4. Run the application:
    ```bash
-   npm start
+   npm run dev
    ```
 
 ## Resources
