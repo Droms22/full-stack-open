@@ -16,7 +16,12 @@ const App = () => {
   const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
 
   const getRandomAnectode = () => {
-    const index = Math.floor(Math.random() * anecdotes.length)
+    let index;
+
+    do {
+      index = Math.floor(Math.random() * anecdotes.length)
+    } while (index === selected)
+
     setSelected(index)
   }
 
