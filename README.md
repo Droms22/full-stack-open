@@ -128,8 +128,8 @@ The repository is organized by parts and exercises, following the course's struc
 | Part    | Status         | Exercises |
 | ------- | -------------- | --------- |
 | Part 0  | ✅ Completed   | 6/6       |
-| Part 1  | 🚧 In Progress | 0/14      |
-| Part 2  | ❌ Not Started |
+| Part 1  | ✅ Completed   | 14/14     |
+| Part 2  | 🚧 In Progress | 0/20      |
 | Part 3  | ❌ Not Started |
 | Part 4  | ❌ Not Started |
 | Part 5  | ❌ Not Started |
