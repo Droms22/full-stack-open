@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const cors = require('cors');
+app.use(cors());
+
 const morgan = require('morgan');
 morgan.token('body', (req) => req.method === 'POST' ? JSON.stringify(req.body) : ' ');
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
@@ -64,7 +67,7 @@ app.post('/api/persons', (request, response) => {
         return response.status(400).json({ error: 'name must be unique' });
     }
 
-    person.id = Math.floor(Math.random() * 100000);
+    person.id = String(Math.floor(Math.random() * 100000));
     persons = persons.concat(person);
 
     response.json(person);

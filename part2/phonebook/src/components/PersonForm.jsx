@@ -1,4 +1,6 @@
 const PersonForm = ({ newPerson, onFormSubmit, onFormChange }) => {
+  const canSubmit = newPerson.name.trim() !== '' && newPerson.number.trim() !== '';
+  
   return (
     <div>
       <form onSubmit={onFormSubmit}>
@@ -9,7 +11,7 @@ const PersonForm = ({ newPerson, onFormSubmit, onFormChange }) => {
           number: <input name='number' value={newPerson.number} onChange={onFormChange}/>
         </div>
         <div>
-          <button type="submit">add</button>
+          <button type="submit" disabled={!canSubmit} >add</button>
         </div>
       </form>
     </div>
