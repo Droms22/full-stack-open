@@ -1,0 +1,66 @@
+@baseUrl = https://phonebook-full-stack-open.onrender.com/api
+
+# Get info
+GET {{baseUrl}}/info
+
+###
+
+# Get all persons
+GET {{baseUrl}}/persons
+
+###
+
+# Get person with ID 1
+GET {{baseUrl}}/persons/1
+
+###
+
+# Get person with ID 9999 (not found test)
+GET {{baseUrl}}/persons/9999
+
+###
+
+# Delete person with ID 1
+DELETE {{baseUrl}}/persons/1
+
+###
+
+# Create new person
+POST {{baseUrl}}/persons
+Content-Type: application/json
+
+{
+    "name": "Mario Rossi",
+    "number": "+39 3271234567"
+}
+
+###
+
+# Create new person, bad request (missing number)
+POST {{baseUrl}}/persons
+Content-Type: application/json
+
+{
+    "name": "Mario Rossi"
+}
+
+###
+
+# Create new person, bad request (missing name)
+POST {{baseUrl}}/persons
+Content-Type: application/json
+
+{
+    "number": "+39 3271234567"
+}
+
+###
+
+# Create new person, bad request (name already exists)
+POST {{baseUrl}}/persons
+Content-Type: application/json
+
+{
+    "name": "Arto Hellas", 
+    "number": "040-123456"
+}
