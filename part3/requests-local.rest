@@ -10,8 +10,8 @@ GET {{baseUrl}}/persons
 
 ###
 
-# Get person with ID 1
-GET {{baseUrl}}/persons/1
+# Get person with ID 67783879eaa663c547f34a6a
+GET {{baseUrl}}/persons/67783879eaa663c547f34a6a
 
 ###
 
@@ -20,8 +20,8 @@ GET {{baseUrl}}/persons/9999
 
 ###
 
-# Delete person with ID 1
-DELETE {{baseUrl}}/persons/1
+# Delete person with ID 6778389c2875e1aded7cfa8f
+DELETE {{baseUrl}}/persons/6778389c2875e1aded7cfa8f
 
 ###
 
@@ -30,7 +30,7 @@ POST {{baseUrl}}/persons
 Content-Type: application/json
 
 {
-    "name": "Mario Rossi",
+    "name": "Mario Bianchi",
     "number": "+39 3271234567"
 }
 
@@ -63,4 +63,15 @@ Content-Type: application/json
 {
     "name": "Arto Hellas", 
     "number": "040-123456"
+}
+
+###
+
+# Update number of person with ID 677857f13a98faf086a569f9
+PUT {{baseUrl}}/persons/677857f13a98faf086a569f9
+Content-Type: application/json
+
+{
+    "name": "Mario Bianchi",
+    "number": "111111111"
 }
