@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const argvLen = process.argv.length;
 
 if (argvLen < 3) {
-    console.log('Please provide password as argument.');
-    process.exit(1);
+  console.log('Please provide password as argument.');
+  process.exit(1);
 }
 
 const dbPassword = encodeURIComponent(process.argv[2]);
