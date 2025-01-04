@@ -15,7 +15,7 @@ const App = () => {
     personService.getAllPersons().then(res => setPersons(res));
   }, []);
 
-  const filteredPersons = persons.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+  const filteredPersons = persons.filter(p => p && p.name.toLowerCase().includes(filter.toLowerCase()));
 
   const notify = (message, type) => {
     setNotification({ message, type });
@@ -38,25 +38,30 @@ const App = () => {
     
     if (newPerson.name.trim() === '') {
       alert('Please enter a name');
-    } else if (persons.some(p => p.name === newPerson.name)) {
+    } else if (persons.some(p => p && p.name === newPerson.name)) {
       if (window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)) { 
         const id = persons.find(p => p.name === newPerson.name).id;
         personService
           .updatePerson(id, newPerson)
           .then(res => {
-            setPersons(persons.map(note => note.id === id ? res : note));
-            notify(`Updated ${newPerson.name} number`, 'success');
-          }).catch(() => {
-            notify(`Information of ${newPerson.name} has already been removed from server`, 'error');
-            setPersons(persons.filter(p => p.name !== newPerson.name));
-          });
+            if (res === null) {
+              notify(`Information of ${newPerson.name} has already been removed from server`, 'error');
+              setPersons(persons.filter(p => p.name !== newPerson.name));
+            } else {
+              setPersons(persons.map(note => note.id === id ? res : note));
+              notify(`Updated ${newPerson.name} number`, 'success');
+            }
+          })
+          .catch(error => notify(error.response.data.error, 'error'));
       }  
     } else {
       personService
         .createPerson(newPerson)
-        .then(res => setPersons(persons.concat(res)));
-
-      notify(`Added ${newPerson.name}`, 'success');
+        .then(res => {
+          setPersons(persons.concat(res));
+          notify(`Added ${newPerson.name}`, 'success');
+        })
+        .catch(error => notify(error.response.data.error, 'error'));
     }
 
     setNewPerson({ name: '', number: '' });
