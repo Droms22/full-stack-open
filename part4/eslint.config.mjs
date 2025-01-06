@@ -16,6 +16,6 @@ export default [
       "no-console": "off"     
     }
   },
-  {languageOptions: { globals: globals.browser, ...globals.node }},
+  {languageOptions: { globals: globals.node }},
   pluginJs.configs.recommended,
 ];
