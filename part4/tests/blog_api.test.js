@@ -4,12 +4,21 @@ const supertest = require('supertest');
 const { test, after, beforeEach, describe } = require('node:test');
 const assert = require('node:assert');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const testHelper = require('./test_helper');
 
 const api = supertest(app);
 
-describe('when there are some blogs saved initially', () => {
+const getRootUserToken = async () => {
+  const response = await api.post('/api/login').send({ username: 'root', password: '12345' }).expect(200).expect('Content-Type', /application\/json/);
+  return response.body.token;
+};
+
+describe('Blogs tests', () => {
   beforeEach(async () => {
+    await User.deleteMany({});
+    await User(testHelper.rootUser).save();
+
     await Blog.deleteMany({});
     
     const promises = testHelper.initialBlogs.map(blog => new Blog(blog).save());
@@ -28,7 +37,7 @@ describe('when there are some blogs saved initially', () => {
   });
   
   describe('Adding a new blog', () => {
-    test('A valid blog can be added', async () => {
+    test('Can add a valid blog if logged', async () => {
       const newBlog = {
         title: 'test',
         author: 'test',
@@ -36,15 +45,29 @@ describe('when there are some blogs saved initially', () => {
         likes: 0
       };
     
-      const response = await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+      const token = await getRootUserToken();
+      const response = await api.post('/api/blogs').send(newBlog).set('Authorization', `Bearer ${token}`).expect(201).expect('Content-Type', /application\/json/);
       const blog = new Blog(response.body).toJSON();
       delete blog.id;
+      delete blog.user;
       assert.deepStrictEqual(blog, newBlog);
     
       const blogsInDb = await testHelper.getBlogsInDb();
       assert.strictEqual(blogsInDb.length, testHelper.initialBlogs.length + 1);
     });
     
+    test('Can\'t add a valid blog if not logged', async () => {
+      const newBlog = {
+        title: 'test',
+        author: 'test',
+        url: 'test',
+        likes: 0
+      };
+
+      const response = await api.post('/api/blogs').send(newBlog).expect(401);
+      assert.strictEqual(response.body.error, 'invalid token');
+    });
+
     test('"likes" property is missing, it will default to 0', async () => {
       const newBlog = {
         title: 'test',
@@ -52,7 +75,8 @@ describe('when there are some blogs saved initially', () => {
         url: 'test'
       };
     
-      const response = await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+      const token = await getRootUserToken();
+      const response = await api.post('/api/blogs').send(newBlog).set('Authorization', `Bearer ${token}`).expect(201).expect('Content-Type', /application\/json/);
       assert.strictEqual(response.body.likes, 0);
     });
     
@@ -63,7 +87,8 @@ describe('when there are some blogs saved initially', () => {
         likes: 0
       };
     
-      await api.post('/api/blogs').send(newBlog).expect(400);
+      const token = await getRootUserToken();
+      await api.post('/api/blogs').send(newBlog).set('Authorization', `Bearer ${token}`).expect(400);
     
       const blogsInDb = await testHelper.getBlogsInDb();
       assert.strictEqual(blogsInDb.length, testHelper.initialBlogs.length);
@@ -76,7 +101,8 @@ describe('when there are some blogs saved initially', () => {
         likes: 0
       };
     
-      await api.post('/api/blogs').send(newBlog).expect(400);
+      const token = await getRootUserToken();
+      await api.post('/api/blogs').send(newBlog).set('Authorization', `Bearer ${token}`).expect(400);
     
       const blogsInDb = await testHelper.getBlogsInDb();
       assert.strictEqual(blogsInDb.length, testHelper.initialBlogs.length);

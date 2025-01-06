@@ -131,8 +131,8 @@ The repository is organized by parts and exercises, following the course's struc
 | Part 1  | ✅ Completed   | 14/14     |
 | Part 2  | ✅ Completed   | 20/20     |
 | Part 3  | ✅ Completed   | 22/22     |
-| Part 4  | 🚧 In Progress | 12/23     |
-| Part 5  | ❌ Not Started |
+| Part 4  | ✅ Completed   | 23/23     |
+| Part 5  | 🚧 In Progress | 0/14      |
 | Part 6  | ❌ Not Started |
 | Part 7  | ❌ Not Started |
 | Part 8  | ❌ Not Started |

@@ -19,7 +19,7 @@ Content-Type: application/json
 ###
 
 # Delete a blog
-DELETE {{baseUrl}}/blogs/677bf3ce7e3a6c46969ae199
+DELETE {{baseUrl}}/blogs/677c2095e1faedc3978ff0f5
 
 ###
 
@@ -32,4 +32,77 @@ Content-Type: application/json
     "author": "test",
     "url": "https://example.com/",
     "likes": 99999
+}
+
+###
+
+# Get all users
+GET {{baseUrl}}/users
+
+###
+
+# Post new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "username": "root",
+    "name": "Root",
+    "password": "12345"
+}
+
+###
+
+# Successful login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "12345"
+}
+
+###
+
+# Unsuccessful login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "prova",
+    "password": "12345"
+}
+
+###
+
+# Post a new blog (logged)
+POST {{baseUrl}}/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3N2MwZjgwMmUwYzJlNmY4YWE2NzY1YSIsImlhdCI6MTczNjE5MjY0MSwiZXhwIjoxNzM2MTk2MjQxfQ.DKYYL_lmkowiF2EGuWjDvL_V3a7ba26JAFStE1Za_2w
+
+{
+    "title": "Test",
+    "author": "test",
+    "url": "https://example.com/",
+    "likes": 10
+}
+
+###
+
+# Delete a blog (logged)
+DELETE {{baseUrl}}/blogs/677c2095e1faedc3978ff0f5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3N2MwZjgwMmUwYzJlNmY4YWE2NzY1YSIsImlhdCI6MTczNjE5MjY0MSwiZXhwIjoxNzM2MTk2MjQxfQ.DKYYL_lmkowiF2EGuWjDvL_V3a7ba26JAFStE1Za_2w
+
+###
+
+# Update a blog (logged)
+PUT {{baseUrl}}/blogs/677c38986e1e95be1ecdff9d
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InByb3ZhIiwiaWQiOiI2NzdjMzg3YjZlMWU5NWJlMWVjZGZmOTkiLCJpYXQiOjE3MzYxOTQ4MzQsImV4cCI6MTczNjE5ODQzNH0.xHnAzdCVpIVrtZm3QtwhgObaHbhPCMf6qeGHV-7EcD0
+
+{
+    "title": "Test",
+    "author": "test",
+    "url": "https://example.com/",
+    "likes": 999
 }
