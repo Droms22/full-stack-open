@@ -15,3 +15,21 @@ Content-Type: application/json
     "url": "https://example.com/",
     "likes": 10
 }
+
+###
+
+# Delete a blog
+DELETE {{baseUrl}}/blogs/677bf3ce7e3a6c46969ae199
+
+###
+
+# Update a blog
+PUT {{baseUrl}}/blogs/677bf3ce7e3a6c46969ae199
+Content-Type: application/json
+
+{
+    "title": "Test",
+    "author": "test",
+    "url": "https://example.com/",
+    "likes": 99999
+}
