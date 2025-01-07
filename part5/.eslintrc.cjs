@@ -16,6 +16,24 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'react/prop-types': false
+    'react/prop-types': 'off',
+    semi: ['error', 'always'],
+    eqeqeq: 'error',
+    'no-unused-vars': 'warn',
+    'no-console': 'off',
   },
-}
+  overrides: [
+    {
+      files: ['*.js'],
+      rules: {
+        quotes: ['error', 'single'],
+      },
+    },
+    {
+      files: ['*.jsx'],
+      rules: {
+        quotes: ['error', 'double'],
+      },
+    },
+  ],
+};
