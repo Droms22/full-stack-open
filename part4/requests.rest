@@ -58,8 +58,8 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-    "username": "root",
-    "password": "12345"
+    "username": "admin",
+    "password": "admin"
 }
 
 ###
@@ -96,13 +96,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb
 ###
 
 # Update a blog (logged)
-PUT {{baseUrl}}/blogs/677c38986e1e95be1ecdff9d
+PUT {{baseUrl}}/blogs/677d7966e46091905e809722
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InByb3ZhIiwiaWQiOiI2NzdjMzg3YjZlMWU5NWJlMWVjZGZmOTkiLCJpYXQiOjE3MzYxOTQ4MzQsImV4cCI6MTczNjE5ODQzNH0.xHnAzdCVpIVrtZm3QtwhgObaHbhPCMf6qeGHV-7EcD0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2NzdkNTUzOWU0NjA5MTkwNWU4MDk1Y2MiLCJpYXQiOjE3MzY2MDUxNzUsImV4cCI6MTczNjYwODc3NX0.pvc2B4R9CX4YPEHEzkgE1J0KhgPW_IE-ji530yDPmiE
 
 {
-    "title": "Test",
-    "author": "test",
-    "url": "https://example.com/",
-    "likes": 999
+    "title": "Example Blog",
+    "author": "John",
+    "url": "https://www.google.com",
+    "likes": 2
 }

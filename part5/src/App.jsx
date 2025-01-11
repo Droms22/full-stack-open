@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
-import BlogList from "./components/BlogList";
+import { useState, useEffect, useRef } from "react";
+import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 
 const App = () => {
+  const blogFormRef = useRef();
+
   const [blogs, setBlogs] = useState([]);
 
   const [notification, setNotification] = useState({
@@ -25,7 +28,6 @@ const App = () => {
       blogService.setToken(user.token);
       setUser(user);
     }
-
     fetchBlogs();
   }, []);
 
@@ -35,11 +37,13 @@ const App = () => {
   };
 
   const fetchBlogs = async () => {
-    const blogs = await blogService.getAll();
-    setBlogs(blogs);
+    const fetchedBlogs = await blogService.getAll();
+    fetchedBlogs.sort((a, b) => b.likes - a.likes);
+    setBlogs(fetchedBlogs);
   };
 
   const addNewblog = async (blog) => {
+    blogFormRef.current.toggleVisibility();
     try {
       const newBlog = await blogService.add(blog);
       setBlogs(blogs.concat(newBlog));
@@ -47,6 +51,26 @@ const App = () => {
         `A new blog "${newBlog.title}" by ${newBlog.author} added!`,
         "success"
       );
+    } catch (e) {
+      notify(e.response.data.error, "error");
+    }
+  };
+
+  const updateBlog = async (blog) => {
+    try {
+      const updated = await blogService.update(blog);
+      setBlogs(blogs.map((blog) => (blog.id === updated.id ? updated : blog)));
+    } catch (e) {
+      notify(e.response.data.error, "error");
+    }
+  };
+
+  const deleteBlog = async (blog) => {
+    try {
+      if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
+        await blogService.deleteBlog(blog);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+      }
     } catch (e) {
       notify(e.response.data.error, "error");
     }
@@ -108,9 +132,20 @@ const App = () => {
           Logout
         </button>
       </div>
-      <BlogForm addNewBlog={addNewblog} />
       <br />
-      <BlogList blogs={blogs} />
+      <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
+        <BlogForm addNewBlog={addNewblog} />
+      </Togglable>
+      <br />
+      {blogs.map((b) => (
+        <Blog
+          blog={b}
+          key={b.id}
+          updateBlog={updateBlog}
+          deleteBlog={deleteBlog}
+          user={user}
+        />
+      ))}
     </div>
   );
 };
