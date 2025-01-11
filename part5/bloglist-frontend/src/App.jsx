@@ -46,7 +46,9 @@ const App = () => {
     blogFormRef.current.toggleVisibility();
     try {
       const newBlog = await blogService.add(blog);
-      setBlogs(blogs.concat(newBlog));
+      const newBlogs = blogs.concat(newBlog);
+      newBlogs.sort((a, b) => b.likes - a.likes);
+      setBlogs(newBlogs);
       notify(
         `A new blog "${newBlog.title}" by ${newBlog.author} added!`,
         "success"
@@ -59,7 +61,11 @@ const App = () => {
   const updateBlog = async (blog) => {
     try {
       const updated = await blogService.update(blog);
-      setBlogs(blogs.map((blog) => (blog.id === updated.id ? updated : blog)));
+      const newBlogs = blogs.map((blog) =>
+        blog.id === updated.id ? updated : blog
+      );
+      newBlogs.sort((a, b) => b.likes - a.likes);
+      setBlogs(newBlogs);
     } catch (e) {
       notify(e.response.data.error, "error");
     }

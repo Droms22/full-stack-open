@@ -33,7 +33,13 @@ blogsRouter.post(
     user.blogs = user.blogs.concat(saved._id);
     await user.save();
 
-    response.status(201).json(saved);
+    const populatedBlog = await Blog.findById(saved._id).populate('user', {
+      username: 1,
+      name: 1,
+      id: 1,
+    });
+
+    response.status(201).json(populatedBlog);
   }
 );
 
@@ -57,11 +63,6 @@ blogsRouter.put(
   middleware.tokenExtractor,
   middleware.userExtractor,
   async (request, response) => {
-    /* const blog = await Blog.findById(request.params.id);
-    if (request.user.id.toString() !== blog.user.toString()) {
-      return response.status(401).json({ error: 'invalid user' });
-    } */
-
     const { title, author, url, likes } = request.body;
     const updated = await Blog.findByIdAndUpdate(
       request.params.id,

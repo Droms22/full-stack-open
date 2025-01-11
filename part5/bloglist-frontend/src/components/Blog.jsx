@@ -24,7 +24,9 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   if (collapsed) {
     return (
       <div style={blogStyle} className="blog">
-        {blog.title} - {blog.author}
+        <span>
+          {blog.title} - {blog.author}
+        </span>
         <button onClick={toggleCollapsed} className="btn-blog-view">
           View
         </button>
@@ -34,7 +36,9 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
   return (
     <div style={blogStyle} className="blog">
-      {blog.title} - {blog.author}
+      <span>
+        {blog.title} - {blog.author}
+      </span>
       <button onClick={toggleCollapsed}>Hide</button>
       <div className="blog-url">
         Link:
