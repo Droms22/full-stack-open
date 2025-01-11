@@ -23,27 +23,32 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
   if (collapsed) {
     return (
-      <div style={blogStyle}>
+      <div style={blogStyle} className="blog">
         {blog.title} - {blog.author}
-        <button onClick={toggleCollapsed}>View</button>
+        <button onClick={toggleCollapsed} className="btn-blog-view">
+          View
+        </button>
       </div>
     );
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {blog.title} - {blog.author}
       <button onClick={toggleCollapsed}>Hide</button>
-      <div>
-        Link:{" "}
+      <div className="blog-url">
+        Link:
         <a href={blog.url} target="_blank" rel="noreferrer">
           {blog.url}
         </a>
       </div>
-      <div>
-        Likes: {blog.likes} <button onClick={() => addLike(blog)}>like</button>
+      <div className="blog-likes">
+        Likes: {blog.likes}{" "}
+        <button className="btn-blog-like" onClick={() => addLike(blog)}>
+          like
+        </button>
       </div>
-      <div>User: {blog.user.name}</div>
+      <div className="blog-user">User: {blog.user.name}</div>
       {isCreatedByUser && removeBlogButton}
     </div>
   );
