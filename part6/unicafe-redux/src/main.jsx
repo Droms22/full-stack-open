@@ -4,6 +4,7 @@ import reducer from './reducer';
 
 const store = createStore(reducer);
 
+// eslint-disable-next-line react-refresh/only-export-components
 const App = () => {
   const dispatchAction = (type) => store.dispatch({ type: type });
 
