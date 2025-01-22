@@ -133,8 +133,8 @@ The repository is organized by parts and exercises, following the course's struc
 | Part 3  | ✅ Completed   | 22/22     |
 | Part 4  | ✅ Completed   | 23/23     |
 | Part 5  | ✅ Completed   | 23/23     |
-| Part 6  | 🚧 In Progress | 0/24      |
-| Part 7  | ❌ Not Started |
+| Part 6  | ✅ Completed   | 24/24     |
+| Part 7  | 🚧 In Progress | 0/21      |
 | Part 8  | ❌ Not Started |
 | Part 9  | ❌ Not Started |
 | Part 10 | ❌ Not Started |
@@ -142,23 +142,6 @@ The repository is organized by parts and exercises, following the course's struc
 | Part 12 | ❌ Not Started |
 | Part 13 | ❌ Not Started |
 | Part 14 | ❌ Not Started |
-
-## How to Use
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/Droms22/full-stack-open.git
-   ```
-2. Navigate to the desired part and exercise folder.
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Run the application:
-   ```bash
-   npm run dev
-   ```
 
 ## Resources
 
