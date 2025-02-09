@@ -12,6 +12,7 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.66.0",
     "axios": "^1.6.7",
     "jsdom": "^24.0.0",
     "prop-types": "^15.8.1",

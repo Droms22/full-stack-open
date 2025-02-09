@@ -1,5 +1,4 @@
 import { useState, useEffect, createRef } from 'react';
-
 import blogService from './services/blogs';
 import loginService from './services/login';
 import storage from './services/storage';
@@ -9,16 +8,26 @@ import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import { useNotificationDispatch } from './context/notificationContext';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const queryClient = useQueryClient();
+
   const [user, setUser] = useState(null);
 
-  const notificationDispatch = useNotificationDispatch();
+  const blogs = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+  });
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+    },
+  });
+
+  const notificationDispatch = useNotificationDispatch();
 
   useEffect(() => {
     const user = storage.loadUser();
@@ -48,9 +57,8 @@ const App = () => {
   };
 
   const handleCreate = async (blog) => {
-    const newBlog = await blogService.create(blog);
-    setBlogs(blogs.concat(newBlog));
-    notify(`Blog created: ${newBlog.title}, ${newBlog.author}`);
+    newBlogMutation.mutate(blog);
+    notify(`Blog created: ${blog.title}, ${blog.author}`);
     blogFormRef.current.toggleVisibility();
   };
 
@@ -102,14 +110,17 @@ const App = () => {
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <NewBlog doCreate={handleCreate} />
       </Togglable>
-      {blogs.sort(byLikes).map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleVote={handleVote}
-          handleDelete={handleDelete}
-        />
-      ))}
+      {!blogs.isLoading &&
+        blogs.data
+          .sort(byLikes)
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleVote={handleVote}
+              handleDelete={handleDelete}
+            />
+          ))}
     </div>
   );
 };
