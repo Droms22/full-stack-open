@@ -1,18 +1,27 @@
-import { useState, useEffect, createRef } from 'react';
+import { useEffect, createRef } from 'react';
+import userService from './services/users';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import storage from './services/storage';
 import Login from './components/Login';
-import Blog from './components/Blog';
-import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
-import Togglable from './components/Togglable';
 import { useNotificationDispatch } from './context/notificationContext';
 import { useUserValue, useUserDispatch } from './context/userContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import Navigation from './components/Navigation';
+import { Routes, Route, useMatch } from 'react-router-dom';
+import Blogs from './views/Blogs';
+import Blog from './views/Blog';
+import Users from './views/Users';
+import User from './views/User';
 
 const App = () => {
   const queryClient = useQueryClient();
+
+  const users = useQuery({
+    queryKey: ['users'],
+    queryFn: userService.getAll,
+  });
 
   const blogs = useQuery({
     queryKey: ['blogs'],
@@ -33,6 +42,27 @@ const App = () => {
     },
   });
 
+  const updateBlogMutation = useMutation({
+    mutationFn: (args) => blogService.update(args.id, args.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+    },
+  });
+
+  const blogMatch = useMatch('/blogs/:id');
+  const blog =
+    blogMatch && !blogs.isLoading
+      ? blogs.data.find((b) => b.id === blogMatch.params.id)
+      : null;
+
+  const blogFormRef = createRef();
+
+  const userMatch = useMatch('/users/:id');
+  const matchedUser =
+    userMatch && !users.isLoading
+      ? users.data.find((u) => u.id === userMatch.params.id)
+      : null;
+
   const notificationDispatch = useNotificationDispatch();
   const user = useUserValue();
   const userDispatch = useUserDispatch();
@@ -43,8 +73,6 @@ const App = () => {
       userDispatch({ type: 'SET', payload: user });
     }
   }, []);
-
-  const blogFormRef = createRef();
 
   const notify = (message, type = 'success') => {
     notificationDispatch({ type: 'SET', payload: { message, type } });
@@ -71,14 +99,15 @@ const App = () => {
   };
 
   const handleVote = async (blog) => {
-    console.log('updating', blog);
-    const updatedBlog = await blogService.update(blog.id, {
-      ...blog,
-      likes: blog.likes + 1,
+    updateBlogMutation.mutate({
+      id: blog.id,
+      data: {
+        ...blog,
+        likes: blog.likes + 1,
+      },
     });
 
-    notify(`You liked ${updatedBlog.title} by ${updatedBlog.author}`);
-    setBlogs(blogs.map((b) => (b.id === blog.id ? updatedBlog : b)));
+    notify(`You liked ${blog.title} by ${blog.author}`);
   };
 
   const handleLogout = () => {
@@ -98,37 +127,43 @@ const App = () => {
   if (!user) {
     return (
       <div>
-        <h2>blogs</h2>
+        <h2>Blogs</h2>
         <Notification />
         <Login doLogin={handleLogin} />
       </div>
     );
   }
 
-  const byLikes = (a, b) => b.likes - a.likes;
-
   return (
     <div>
-      <h2>blogs</h2>
+      <Navigation username={user.name} onLogout={handleLogout} />
+      <h2>Blogs</h2>
       <Notification />
-      <div>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </div>
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <NewBlog doCreate={handleCreate} />
-      </Togglable>
-      {!blogs.isLoading &&
-        blogs.data
-          .sort(byLikes)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleVote={handleVote}
-              handleDelete={handleDelete}
-            />
-          ))}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            !blogs.isLoading && (
+              <Blogs
+                blogs={blogs.data}
+                onCreate={handleCreate}
+                onVote={handleVote}
+                onDelete={handleDelete}
+                blogFormRef={blogFormRef}
+              />
+            )
+          }
+        />
+        <Route
+          path="/blogs/:id"
+          element={<Blog blog={blog} onVote={handleVote} />}
+        />
+        <Route
+          path="/users"
+          element={!users.isLoading && <Users users={users.data} />}
+        />
+        <Route path="/users/:id" element={<User user={matchedUser} />} />
+      </Routes>
     </div>
   );
 };
