@@ -8,12 +8,11 @@ import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import { useNotificationDispatch } from './context/notificationContext';
+import { useUserValue, useUserDispatch } from './context/userContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const App = () => {
   const queryClient = useQueryClient();
-
-  const [user, setUser] = useState(null);
 
   const blogs = useQuery({
     queryKey: ['blogs'],
@@ -35,11 +34,13 @@ const App = () => {
   });
 
   const notificationDispatch = useNotificationDispatch();
+  const userValue = useUserValue();
+  const userDispatch = useUserDispatch();
 
   useEffect(() => {
     const user = storage.loadUser();
     if (user) {
-      setUser(user);
+      userDispatch({ type: 'SET', payload: user });
     }
   }, []);
 
@@ -55,7 +56,7 @@ const App = () => {
   const handleLogin = async (credentials) => {
     try {
       const user = await loginService.login(credentials);
-      setUser(user);
+      userDispatch({ type: 'SET', payload: user });
       storage.saveUser(user);
       notify(`Welcome back, ${user.name}`);
     } catch (error) {
@@ -81,9 +82,10 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    const userName = userValue.name;
+    userDispatch({ type: 'CLEAR' });
     storage.removeUser();
-    notify(`Bye, ${user.name}!`);
+    notify(`Bye, ${userName}!`);
   };
 
   const handleDelete = async (blog) => {
@@ -93,7 +95,7 @@ const App = () => {
     }
   };
 
-  if (!user) {
+  if (!userValue) {
     return (
       <div>
         <h2>blogs</h2>
@@ -110,7 +112,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <div>
-        {user.name} logged in
+        {userValue.name} logged in
         <button onClick={handleLogout}>logout</button>
       </div>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
