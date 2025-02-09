@@ -110,6 +110,16 @@ const App = () => {
     notify(`You liked ${blog.title} by ${blog.author}`);
   };
 
+  const handleComment = async (blog, comment) => {
+    updateBlogMutation.mutate({
+      id: blog.id,
+      data: {
+        ...blog,
+        comments: blog.comments.concat(comment),
+      },
+    });
+  };
+
   const handleLogout = () => {
     const userName = user.name;
     userDispatch({ type: 'CLEAR' });
@@ -156,7 +166,9 @@ const App = () => {
         />
         <Route
           path="/blogs/:id"
-          element={<Blog blog={blog} onVote={handleVote} />}
+          element={
+            <Blog blog={blog} onVote={handleVote} onComment={handleComment} />
+          }
         />
         <Route
           path="/users"

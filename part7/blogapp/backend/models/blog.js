@@ -5,6 +5,7 @@ const schema = mongoose.Schema({
   author: String,
   url: String,
   likes: Number,
+  comments: Array,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
