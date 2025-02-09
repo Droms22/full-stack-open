@@ -27,6 +27,13 @@ const App = () => {
     },
   });
 
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+    },
+  });
+
   const notificationDispatch = useNotificationDispatch();
 
   useEffect(() => {
@@ -81,8 +88,7 @@ const App = () => {
 
   const handleDelete = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      await blogService.remove(blog.id);
-      setBlogs(blogs.filter((b) => b.id !== blog.id));
+      deleteBlogMutation.mutate(blog.id);
       notify(`Blog ${blog.title}, by ${blog.author} removed`);
     }
   };
