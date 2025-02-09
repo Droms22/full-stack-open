@@ -34,7 +34,7 @@ const App = () => {
   });
 
   const notificationDispatch = useNotificationDispatch();
-  const userValue = useUserValue();
+  const user = useUserValue();
   const userDispatch = useUserDispatch();
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    const userName = userValue.name;
+    const userName = user.name;
     userDispatch({ type: 'CLEAR' });
     storage.removeUser();
     notify(`Bye, ${userName}!`);
@@ -95,7 +95,7 @@ const App = () => {
     }
   };
 
-  if (!userValue) {
+  if (!user) {
     return (
       <div>
         <h2>blogs</h2>
@@ -112,7 +112,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <div>
-        {userValue.name} logged in
+        {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </div>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
