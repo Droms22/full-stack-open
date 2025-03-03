@@ -4,7 +4,6 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 import storage from './services/storage';
 import Login from './components/Login';
-import Notification from './components/Notification';
 import { useNotificationDispatch } from './context/notificationContext';
 import { useUserValue, useUserDispatch } from './context/userContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +13,7 @@ import Blogs from './views/Blogs';
 import Blog from './views/Blog';
 import Users from './views/Users';
 import User from './views/User';
+import { toast } from 'sonner';
 
 const App = () => {
   const queryClient = useQueryClient();
@@ -63,11 +63,11 @@ const App = () => {
       ? users.data.find((u) => u.id === userMatch.params.id)
       : null;
 
-  const notificationDispatch = useNotificationDispatch();
   const user = useUserValue();
   const userDispatch = useUserDispatch();
 
   useEffect(() => {
+    document.body.classList.add('dark');
     const user = storage.loadUser();
     if (user) {
       userDispatch({ type: 'SET', payload: user });
@@ -75,10 +75,9 @@ const App = () => {
   }, []);
 
   const notify = (message, type = 'success') => {
-    notificationDispatch({ type: 'SET', payload: { message, type } });
-    setTimeout(() => {
-      notificationDispatch({ type: 'CLEAR' });
-    }, 5000);
+    toast(message, {
+      description: type,
+    });
   };
 
   const handleLogin = async (credentials) => {
@@ -136,19 +135,15 @@ const App = () => {
 
   if (!user) {
     return (
-      <div>
-        <h2>Blogs</h2>
-        <Notification />
+      <div className="container flex items-center justify-center h-screen">
         <Login doLogin={handleLogin} />
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="container">
       <Navigation username={user.name} onLogout={handleLogout} />
-      <h2>Blogs</h2>
-      <Notification />
       <Routes>
         <Route
           path="/"
