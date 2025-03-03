@@ -123,26 +123,6 @@ The repository is organized by parts and exercises, following the course's struc
 ├── ...
 ```
 
-## Progress Tracker
-
-| Part    | Status         | Exercises |
-| ------- | -------------- | --------- |
-| Part 0  | ✅ Completed   | 6/6       |
-| Part 1  | ✅ Completed   | 14/14     |
-| Part 2  | ✅ Completed   | 20/20     |
-| Part 3  | ✅ Completed   | 22/22     |
-| Part 4  | ✅ Completed   | 23/23     |
-| Part 5  | ✅ Completed   | 23/23     |
-| Part 6  | ✅ Completed   | 24/24     |
-| Part 7  | 🚧 In Progress | 0/21      |
-| Part 8  | ❌ Not Started |
-| Part 9  | ❌ Not Started |
-| Part 10 | ❌ Not Started |
-| Part 11 | ❌ Not Started |
-| Part 12 | ❌ Not Started |
-| Part 13 | ❌ Not Started |
-| Part 14 | ❌ Not Started |
-
 ## Resources
 
 - [Full Stack Open Course Website](https://fullstackopen.com)
